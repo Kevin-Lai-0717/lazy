@@ -17,7 +17,7 @@ class Insight:
         self.password = password
 
     def open_chrome(self):
-        self.driver = webdriver.Chrome("chromedriver")
+        self.driver = webdriver.Chrome("chromedriver.exe")
 
     def connect(self):
         options = webdriver.ChromeOptions()

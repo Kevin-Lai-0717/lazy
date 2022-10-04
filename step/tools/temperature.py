@@ -13,7 +13,7 @@ class Temperature:
         self.mask_off = mask_off
 
     def open_chrome(self):
-        self.driver = webdriver.Chrome("chromedriver")
+        self.driver = webdriver.Chrome("chromedriver.exe")
 
 
     def connect(self):
@@ -29,7 +29,7 @@ class Temperature:
         time.sleep(5)
 
     def my_temperature(self):
-        top = 36.7
+        top = 36.8
         bottom = 36.3
         into = random.uniform(top, bottom)
         point = 1
@@ -69,6 +69,7 @@ class Temperature:
             self.driver.find_element(By.ID, "BIGM").send_keys(yes_m)
             self.driver.find_element(By.ID, "BIGD").send_keys(yes_d)
             time.sleep(1)
+
             # -----TOCC裡脫口罩的場所如果為餐飲場所 視同沒脫口罩 但我還是用完整XPATH抓到了-----
             self.driver.find_element(By.XPATH,
                                 "/html/body/div/section[1]/div/div/div[2]/div/table[1]/tbody/tr[24]/td[2]/div/label[1]/input").click()
