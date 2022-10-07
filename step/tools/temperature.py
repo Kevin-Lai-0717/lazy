@@ -4,6 +4,7 @@ import datetime
 import random
 import time
 
+tocc_url = "https://webapp.cgmh.org.tw/temperature/Home/Login"
 
 class Temperature:
 
@@ -18,7 +19,7 @@ class Temperature:
 
     def connect(self):
         # -----前往TOCC網頁-----
-        self.driver.get("https://webapp.cgmh.org.tw/temperature/Home/Login")
+        self.driver.get(tocc_url)
         time.sleep(2)
 
         # -----輸入帳號密碼與點選登入-----

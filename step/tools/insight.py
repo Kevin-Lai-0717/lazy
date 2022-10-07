@@ -10,6 +10,11 @@ from docx.shared import Pt, Cm
 import os
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 
+insight_url = "https://172.23.11.100/login"
+docx_path = r"C:\Users\zxc578623\Desktop\工作紀錄.docx"
+imgdir_path = r"C:\Users\zxc578623\Documents\\"
+finished_path = r"C:\Users\zxc578623\Desktop\工作紀錄-完成.docx"
+
 
 class Insight:
     def __init__(self, account, password):
@@ -23,7 +28,7 @@ class Insight:
         options = webdriver.ChromeOptions()
         options.add_argument('ignore-certificate-errors')
         self.driver = webdriver.Chrome(options=options)
-        self.driver.get("https://172.23.11.100/login")
+        self.driver.get(insight_url)
         time.sleep(2)
         self.driver.find_element(By.ID, "username").send_keys(self.account)
         self.driver.find_element(By.ID, "password").send_keys(self.password)
@@ -55,9 +60,7 @@ class Insight:
         self.driver.close()
 
     def edit_text_to_docx(self):
-        weekday = datetime.date.today().weekday()
-
-        self.docx = Document(r'C:\Users\zxc578623\Desktop\工作紀錄.docx')
+        self.docx = Document(docx_path)
         # -----新增段落與文字-----
         p = self.docx.add_paragraph("")
         p.add_run(self.text).font.size = Pt(14)
@@ -69,49 +72,41 @@ class Insight:
 
         else:
             p.add_run(self.new_text2[2]).font.size = Pt(14)
-        # -----如果今天是星期五-----
-        if weekday == 4:
-            self.docx.add_page_break()
-
-        self.docx.save(r'C:\Users\zxc578623\Desktop\工作紀錄.docx')
+        self.docx.save(docx_path)
 
     def add_pictures(self):
-        self.docx = Document(r'C:\Users\zxc578623\Desktop\工作紀錄.docx')
-        # -----測試的話記得加
-        # self.docx.add_page_break()
+        self.docx = Document(docx_path)
+        self.docx.add_page_break()
         today = datetime.date.today()
         startdate = today + datetime.timedelta(days=-4)
         # -----處理圖檔資料夾
-        imgdirpath = r"C:\Users\zxc578623\Documents\\"
-        imgdir = os.listdir(imgdirpath)
-        imgdir.sort(key=lambda fn: os.path.getmtime(imgdirpath + fn))
+        imgdir = os.listdir(imgdir_path)
+        imgdir.sort(key=lambda fn: os.path.getmtime(imgdir_path + fn))
         print(imgdir)
         s = -1
-        dir_new = os.path.join(imgdirpath, imgdir[s])
-        print(dir_new)
-
+        dir_new = os.path.join(imgdir_path, imgdir[s])
         # -----判斷是不是指定的資料夾
         try:
             while True:
+                # -----如果最新的檔案不是資料夾就再往前推-----
                 if os.path.isdir(dir_new) == False:
                     s -= 1
-                    dir_new = os.path.join(imgdirpath, imgdir[s])
+                    dir_new = os.path.join(imgdir_path, imgdir[s])
                     continue
                 else:
+                    # -----如果資料夾的開頭不是指定格式就再往前推-----
                     if imgdir[s].startswith("file-download-") == False:
                         s -= 1
+                        dir_new = os.path.join(imgdir_path, imgdir[s])
                         continue
                     else:
-                        if imgdir[s].endswith(".zip"):
-                            s -= 1
-                            continue
-                        else:
-                            break
+                        break
         except:
             print("沒有指定的圖檔資料夾")
             os._exit(0)
 
         # -----處理圖檔格式
+        print(dir_new)
         imgpath = dir_new + "\\"
         imglist = os.listdir(imgpath)
         imglist.sort(key=lambda x: int(x.replace("IMG_", "").split(".")[0]))
@@ -164,5 +159,4 @@ class Insight:
             s += 1
             pic.width = Cm(18.44)
             pic.height = Cm(24.58)
-        self.docx.save(r'C:\Users\zxc578623\Desktop\工作紀錄-完成.docx')
-
+        self.docx.save(finished_path)

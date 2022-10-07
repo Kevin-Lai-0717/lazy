@@ -13,15 +13,15 @@ Insight_data = {"acc": "administrator",
 class Step:
 
     def temp(self):
-        self.weekday = datetime.date.today().weekday()
+        weekday = datetime.date.today().weekday()
         i = 0
 
         # -----不是周一 就不用寫tocc-----
-        if self.weekday != 0:
-            Temp = Temperature(tocc_data.get("acc"), tocc_data.get("pas"), mask_off=True)
-            Temp.open_chrome()
-            Temp.connect()
-            Temp.my_temperature()
+        if weekday != 0:
+            temp = Temperature(tocc_data.get("acc"), tocc_data.get("pas"), mask_off=True)
+            temp.open_chrome()
+            temp.connect()
+            temp.my_temperature()
 
         else:
             # -----詢問是否曾脫口罩-----
@@ -39,11 +39,11 @@ class Step:
                     os._exit(0)
                 else:
                     break
-            Temp = Temperature(tocc_data.get("acc"), tocc_data.get("pas"), mask_off)
-            Temp.open_chrome()
-            Temp.connect()
-            Temp.my_tocc()
-            Temp.my_temperature()
+            temp = Temperature(tocc_data.get("acc"), tocc_data.get("pas"), mask_off)
+            temp.open_chrome()
+            temp.connect()
+            temp.my_tocc()
+            temp.my_temperature()
 
     def insight(self):
         insight = Insight(Insight_data.get("acc"), Insight_data.get("pas"))
@@ -53,7 +53,8 @@ class Step:
         insight.edit_text_to_docx()
 
     def pic(self):
-        if self.weekday == 4:
+        weekday = datetime.date.today().weekday()
+        if weekday != 4:
             print("今天不是星期五 不要貼上圖檔")
             os._exit(0)
         else:
